@@ -4,7 +4,7 @@ from guns.random_walk import RandomWalker
 
 class Victim(RandomWalker):
     '''
-    A sheep that walks around, reproduces (asexually) and gets eaten.
+    A victitm that walks around and suffers violence when encountering aggressor.
 
     The init is the same as the RandomWalker.
     '''
