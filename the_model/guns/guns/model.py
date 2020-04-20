@@ -27,20 +27,20 @@ class Guns(Model):
     initial_victims = 100
     initial_aggressors = 5
 
-    prob_victims_have_gun = .2
+    prob_victims_have_gun = 20
+    reaction_if_has_gun = 85
+    chance_death_gun = 85
 
-    reaction_if_has_gun = .85
-    chance_death_gun =.85
-
-    verbose = False  # Print-monitoring
+    verbose = True  # Print-monitoring
 
     description = 'A model for simulating the victim aggressor interaction mediated by presence of guns.'
 
     def __init__(self, height=20, width=20,
                  initial_victims=100,
                  initial_aggressors=5,
-                 reaction_if_has_gun=.85,
-                 chance_death_gun=.85):
+                 prob_victims_have_gun=20,
+                 reaction_if_has_gun=85,
+                 chance_death_gun=85):
         """
         Create a new Guns model with the given parameters.
 
@@ -56,6 +56,7 @@ class Guns(Model):
         self.initial_victims = initial_victims
         self.initial_aggressors = initial_aggressors
 
+        self.prob_victims_have_gun = prob_victims_have_gun
         self.reaction_if_has_gun = reaction_if_has_gun
         self.chance_death_gun = chance_death_gun
 
@@ -71,7 +72,7 @@ class Guns(Model):
         for i in range(self.initial_victims):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
-            has_gun = True if self.random.random() < self.prob_victims_have_gun else False
+            has_gun = True if self.random.random() < self.prob_victims_have_gun / 100 else False
             victim = Victim(self.next_id(), (x, y), self, True, has_gun)
             self.grid.place_agent(victim, (x, y))
             self.schedule.add(victim)
@@ -100,9 +101,9 @@ class Guns(Model):
     def run_model(self, step_count=200):
 
         if self.verbose:
-            print('Initial number wolves: ',
+            print('Initial number aggressors: ',
                   self.schedule.get_breed_count(Aggressor))
-            print('Initial number sheep: ',
+            print('Initial number victims: ',
                   self.schedule.get_breed_count(Victim))
 
         for i in range(step_count):
@@ -110,7 +111,7 @@ class Guns(Model):
 
         if self.verbose:
             print('')
-            print('Final number wolves: ',
+            print('Final number aggressors: ',
                   self.schedule.get_breed_count(Aggressor))
-            print('Final number sheep: ',
+            print('Final number victims: ',
                   self.schedule.get_breed_count(Victim))

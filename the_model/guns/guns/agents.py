@@ -23,7 +23,7 @@ class Victim(RandomWalker):
 
 class Aggressor(RandomWalker):
     """
-    A wolf that walks around, looking for victims.
+    An aggressor that walks around, looking for victims.
     """
 
     has_gun = True
@@ -44,7 +44,7 @@ class Aggressor(RandomWalker):
 
             # Confront
             if victim_to_attack.has_gun:
-                if self.random.random() > self.model.reaction_if_has_gun:
-                    if self.random.random() > self.model.chance_death_gun:
-                        self.model.grid._remove_agent(self.pos, victim)
-                        self.model.schedule.remove(victim)
+                if self.random.random() > self.model.reaction_if_has_gun / 100:
+                    if self.random.random() > self.model.chance_death_gun / 100:
+                        self.model.grid._remove_agent(self.pos, victim_to_attack)
+                        self.model.schedule.remove(victim_to_attack)
