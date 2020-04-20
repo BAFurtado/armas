@@ -1,95 +1,86 @@
-'''
-Wolf-Sheep Predation Model
+"""
+A simple victim x aggressor encounter model
 ================================
-
-Replication of the model found in NetLogo:
+Directly adapted from mesa example which is inspired by the model found in NetLogo:
     Wilensky, U. (1997). NetLogo Wolf Sheep Predation model.
-    http://ccl.northwestern.edu/netlogo/models/WolfSheepPredation.
+    http://ccl.northwestern.edu/netlogo/models/GunsPredation.
     Center for Connected Learning and Computer-Based Modeling,
     Northwestern University, Evanston, IL.
-'''
+"""
 
 from mesa import Model
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
-from guns.agents import Sheep, Wolf, GrassPatch
+from guns.agents import Victim, Wolf, GrassPatch
 from guns.schedule import RandomActivationByBreed
 
 
-class WolfSheep(Model):
-    '''
-    Wolf-Sheep Predation Model
-    '''
+class Guns(Model):
+    """
+    A Gun Possession Model
+    """
 
     height = 20
     width = 20
 
-    initial_sheep = 100
-    initial_wolves = 50
+    initial_victims = 100
+    initial_aggressors = 5
 
-    sheep_reproduce = 0.04
-    wolf_reproduce = 0.05
+    # sheep_reproduce = 0.04
+    # wolf_reproduce = 0.05
 
-    wolf_gain_from_food = 20
+    # wolf_gain_from_food = 20
 
-    grass = False
-    grass_regrowth_time = 30
-    sheep_gain_from_food = 4
+    # grass = False
+    # grass_regrowth_time = 30
+    # sheep_gain_from_food = 4
 
     verbose = False  # Print-monitoring
 
-    description = 'A model for simulating wolf and sheep (predator-prey) ecosystem modelling.'
+    description = 'A model for simulating the victim aggressor interaction mediated by presence of guns.'
 
     def __init__(self, height=20, width=20,
-                 initial_sheep=100, initial_wolves=50,
-                 sheep_reproduce=0.04, wolf_reproduce=0.05,
-                 wolf_gain_from_food=20,
-                 grass=False, grass_regrowth_time=30, sheep_gain_from_food=4):
-        '''
-        Create a new Wolf-Sheep model with the given parameters.
+                 initial_victims=100,
+                 initial_aggressors=5,
+                 reaction_if_has_gun=.85,
+                 chance_death_gun=.85):
+        """
+        Create a new Guns model with the given parameters.
 
         Args:
-            initial_sheep: Number of sheep to start with
-            initial_wolves: Number of wolves to start with
-            sheep_reproduce: Probability of each sheep reproducing each step
-            wolf_reproduce: Probability of each wolf reproducing each step
-            wolf_gain_from_food: Energy a wolf gains from eating a sheep
-            grass: Whether to have the sheep eat grass for energy
-            grass_regrowth_time: How long it takes for a grass patch to regrow
-                                 once it is eaten
-            sheep_gain_from_food: Energy sheep gain from grass, if enabled.
-        '''
+            initial_victims: Number of potential victims to start with
+            initial_aggressors: Number of aggressors to start with
+
+        """
         super().__init__()
         # Set parameters
         self.height = height
         self.width = width
-        self.initial_sheep = initial_sheep
-        self.initial_wolves = initial_wolves
-        self.sheep_reproduce = sheep_reproduce
-        self.wolf_reproduce = wolf_reproduce
-        self.wolf_gain_from_food = wolf_gain_from_food
-        self.grass = grass
-        self.grass_regrowth_time = grass_regrowth_time
-        self.sheep_gain_from_food = sheep_gain_from_food
+        self.initial_victims = initial_victims
+        self.initial_aggressors = initial_aggressors
 
+        self.reaction_if_has_gun = reaction_if_has_gun
+        self.chance_death_gun = chance_death_gun
         self.schedule = RandomActivationByBreed(self)
         self.grid = MultiGrid(self.height, self.width, torus=True)
+        # It is here that we provide data for the DataCollector. It will be then retrieved from key "Wolves" within
+        # ChartModule at server.py and sent ver to as a canvas element
         self.datacollector = DataCollector(
-            {"Wolves": lambda m: m.schedule.get_breed_count(Wolf),
-             "Sheep": lambda m: m.schedule.get_breed_count(Sheep)})
+            {"Aggressors": lambda m: m.schedule.get_breed_count(Wolf),
+             "Victims": lambda m: m.schedule.get_breed_count(Victim)})
 
         # Create sheep:
-        for i in range(self.initial_sheep):
+        for i in range(self.initial_victims):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
             energy = self.random.randrange(2 * self.sheep_gain_from_food)
-            sheep = Sheep(self.next_id(), (x, y), self, True, energy)
+            sheep = Victim(self.next_id(), (x, y), self, True, energy)
             self.grid.place_agent(sheep, (x, y))
             self.schedule.add(sheep)
 
         # Create wolves
-        for i in range(self.initial_wolves):
+        for i in range(self.initial_aggressors):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
             energy = self.random.randrange(2 * self.wolf_gain_from_food)
@@ -123,7 +114,7 @@ class WolfSheep(Model):
         if self.verbose:
             print([self.schedule.time,
                    self.schedule.get_breed_count(Wolf),
-                   self.schedule.get_breed_count(Sheep)])
+                   self.schedule.get_breed_count(Victim)])
 
     def run_model(self, step_count=200):
 
@@ -131,7 +122,7 @@ class WolfSheep(Model):
             print('Initial number wolves: ',
                   self.schedule.get_breed_count(Wolf))
             print('Initial number sheep: ',
-                  self.schedule.get_breed_count(Sheep))
+                  self.schedule.get_breed_count(Victim))
 
         for i in range(step_count):
             self.step()
@@ -141,4 +132,4 @@ class WolfSheep(Model):
             print('Final number wolves: ',
                   self.schedule.get_breed_count(Wolf))
             print('Final number sheep: ',
-                  self.schedule.get_breed_count(Sheep))
+                  self.schedule.get_breed_count(Victim))
