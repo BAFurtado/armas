@@ -2,8 +2,8 @@ from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.UserParam import UserSettableParameter
 
-from guns.agents import Aggressor, Victim, GrassPatch
-from guns.model import Guns
+from guns.agents import Wolf, Sheep, GrassPatch
+from guns.model import WolfSheep
 
 
 def wolf_sheep_portrayal(agent):
@@ -12,13 +12,13 @@ def wolf_sheep_portrayal(agent):
 
     portrayal = {}
 
-    if type(agent) is Victim:
+    if type(agent) is Sheep:
         portrayal["Shape"] = "guns/resources/sheep.png"
         # https://icons8.com/web-app/433/sheep
         portrayal["scale"] = 0.9
         portrayal["Layer"] = 1
 
-    elif type(agent) is Aggressor:
+    elif type(agent) is Wolf:
         portrayal["Shape"] = "guns/resources/wolf.png"
         # https://icons8.com/web-app/36821/German-Shepherd
         portrayal["scale"] = 0.9
@@ -56,5 +56,5 @@ model_params = {"grass": UserSettableParameter('checkbox', 'Grass Enabled', True
                 "wolf_gain_from_food": UserSettableParameter('slider', 'Wolf Gain From Food Rate', 20, 1, 50),
                 "sheep_gain_from_food": UserSettableParameter('slider', 'Sheep Gain From Food', 4, 1, 10)}
 
-server = ModularServer(Guns, [canvas_element, chart_element], "Wolf Sheep Predation", model_params)
+server = ModularServer(WolfSheep, [canvas_element, chart_element], "Wolf Sheep Predation", model_params)
 server.port = 8521

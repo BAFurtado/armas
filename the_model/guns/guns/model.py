@@ -1,8 +1,8 @@
 '''
-An initial aggressor-victim interaction Model
+Wolf-Sheep Predation Model
 ================================
 
-Adaptation of the model found in NetLogo:
+Replication of the model found in NetLogo:
     Wilensky, U. (1997). NetLogo Wolf Sheep Predation model.
     http://ccl.northwestern.edu/netlogo/models/WolfSheepPredation.
     Center for Connected Learning and Computer-Based Modeling,
@@ -13,11 +13,11 @@ from mesa import Model
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
-from guns.agents import Victim, Aggressor, GrassPatch
+from guns.agents import Sheep, Wolf, GrassPatch
 from guns.schedule import RandomActivationByBreed
 
 
-class Guns(Model):
+class WolfSheep(Model):
     '''
     Wolf-Sheep Predation Model
     '''
@@ -76,15 +76,15 @@ class Guns(Model):
         self.schedule = RandomActivationByBreed(self)
         self.grid = MultiGrid(self.height, self.width, torus=True)
         self.datacollector = DataCollector(
-            {"Aggressors": lambda m: m.schedule.get_breed_count(Aggressor),
-             "Victims": lambda m: m.schedule.get_breed_count(Victim)})
+            {"Wolves": lambda m: m.schedule.get_breed_count(Wolf),
+             "Sheep": lambda m: m.schedule.get_breed_count(Sheep)})
 
         # Create sheep:
         for i in range(self.initial_sheep):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
             energy = self.random.randrange(2 * self.sheep_gain_from_food)
-            sheep = Victim(self.next_id(), (x, y), self, True, energy)
+            sheep = Sheep(self.next_id(), (x, y), self, True, energy)
             self.grid.place_agent(sheep, (x, y))
             self.schedule.add(sheep)
 
@@ -93,7 +93,7 @@ class Guns(Model):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
             energy = self.random.randrange(2 * self.wolf_gain_from_food)
-            wolf = Aggressor(self.next_id(), (x, y), self, True, energy)
+            wolf = Wolf(self.next_id(), (x, y), self, True, energy)
             self.grid.place_agent(wolf, (x, y))
             self.schedule.add(wolf)
 

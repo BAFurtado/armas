@@ -2,9 +2,9 @@ from mesa import Agent
 from guns.random_walk import RandomWalker
 
 
-class Victim(RandomWalker):
+class Sheep(RandomWalker):
     '''
-    A victitm that walks around and suffers violence when encountering aggressor.
+    A sheep that walks around, reproduces (asexually) and gets eaten.
 
     The init is the same as the RandomWalker.
     '''
@@ -44,13 +44,13 @@ class Victim(RandomWalker):
             # Create a new sheep:
             if self.model.grass:
                 self.energy /= 2
-            lamb = Victim(self.model.next_id(), self.pos, self.model,
-                          self.moore, self.energy)
+            lamb = Sheep(self.model.next_id(), self.pos, self.model,
+                         self.moore, self.energy)
             self.model.grid.place_agent(lamb, self.pos)
             self.model.schedule.add(lamb)
 
 
-class Aggressor(RandomWalker):
+class Wolf(RandomWalker):
     '''
     A wolf that walks around, reproduces (asexually) and eats sheep.
     '''
@@ -68,7 +68,7 @@ class Aggressor(RandomWalker):
         # If there are sheep present, eat one
         x, y = self.pos
         this_cell = self.model.grid.get_cell_list_contents([self.pos])
-        sheep = [obj for obj in this_cell if isinstance(obj, Victim)]
+        sheep = [obj for obj in this_cell if isinstance(obj, Sheep)]
         if len(sheep) > 0:
             sheep_to_eat = self.random.choice(sheep)
             self.energy += self.model.wolf_gain_from_food
@@ -85,8 +85,8 @@ class Aggressor(RandomWalker):
             if self.random.random() < self.model.wolf_reproduce:
                 # Create a new wolf cub
                 self.energy /= 2
-                cub = Aggressor(self.model.next_id(), self.pos, self.model,
-                                self.moore, self.energy)
+                cub = Wolf(self.model.next_id(), self.pos, self.model,
+                           self.moore, self.energy)
                 self.model.grid.place_agent(cub, cub.pos)
                 self.model.schedule.add(cub)
 
