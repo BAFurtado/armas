@@ -30,7 +30,7 @@ class Aggressor(RandomWalker):
 
     def __init__(self, unique_id, pos, model, moore, has_gun=True):
         super().__init__(unique_id, pos, model, moore=moore)
-        self.has_gun = True
+        self.has_gun = has_gun
 
     def step(self):
         self.random_move()
@@ -43,7 +43,8 @@ class Aggressor(RandomWalker):
             victim_to_attack = self.random.choice(victim)
 
             # Confront
-            if self.random.random() > self.model.reaction_if_has_gun:
-                if self.random.random() > self.model.chance_death_gun:
-                    self.model.grid._remove_agent(self.pos, victim)
-                    self.model.schedule.remove(victim)
+            if victim_to_attack.has_gun:
+                if self.random.random() > self.model.reaction_if_has_gun:
+                    if self.random.random() > self.model.chance_death_gun:
+                        self.model.grid._remove_agent(self.pos, victim)
+                        self.model.schedule.remove(victim)
