@@ -44,8 +44,7 @@ class Aggressor(RandomWalker):
 
             # Confront
             if victim_to_attack.has_gun:
-                print('victim has hun')
-                if self.random.random() < self.model.reaction_if_has_gun / 100:
-                    if self.random.random() < self.model.chance_death_gun / 100:
+                if self.random.random() < self.model.reaction_if_has_gun:
+                    if self.random.random() < self.model.chance_death_gun:
                         self.model.grid._remove_agent(self.pos, victim_to_attack)
                         self.model.schedule.remove(victim_to_attack)

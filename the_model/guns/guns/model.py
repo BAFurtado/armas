@@ -38,9 +38,9 @@ class Guns(Model):
     def __init__(self, height=20, width=20,
                  initial_victims=100,
                  initial_aggressors=5,
-                 prob_victims_have_gun=20,
-                 reaction_if_has_gun=85,
-                 chance_death_gun=85):
+                 prob_victims_have_gun=0.20,
+                 reaction_if_has_gun=0.85,
+                 chance_death_gun=0.85):
         """
         Create a new Guns model with the given parameters.
 
@@ -72,7 +72,7 @@ class Guns(Model):
         for i in range(self.initial_victims):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
-            has_gun = True if self.random.random() < self.prob_victims_have_gun / 100 else False
+            has_gun = True if self.random.random() < self.prob_victims_have_gun else False
             victim = Victim(self.next_id(), (x, y), self, True, has_gun)
             self.grid.place_agent(victim, (x, y))
             self.schedule.add(victim)
@@ -98,6 +98,10 @@ class Guns(Model):
                    self.schedule.get_breed_count(Aggressor),
                    self.schedule.get_breed_count(Victim)])
 
+        # New condition to stop the model
+        if self.schedule.get_breed_count(Victim) == 0:
+            self.running = False
+
     def run_model(self, step_count=200):
 
         if self.verbose:
@@ -106,6 +110,7 @@ class Guns(Model):
             print('Initial number victims: ',
                   self.schedule.get_breed_count(Victim))
 
+        # Steps are not being set here, but on superclass. Changes should be made in the step function above!
         for i in range(step_count):
             self.step()
 

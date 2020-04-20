@@ -35,12 +35,16 @@ canvas_element = CanvasGrid(guns_portrayal, 20, 20, 500, 500)
 chart_element = ChartModule([{"Label": "Aggressors", "Color": "#AA0000"},
                              {"Label": "Victims", "Color": "#666666"}])
 
-model_params = {"initial_victims": UserSettableParameter('slider', 'Initial Victim Population', 100, 10, 300),
-                "initial_aggressors": UserSettableParameter('slider', 'Initial Aggressor Population', 5, 1, 20),
-                "reaction_if_has_gun": UserSettableParameter('slider', 'Reaction if Victim has gun', 85, 1, 100),
-                "prob_victims_have_gun": UserSettableParameter('slider', 'Prob. Victims have guns', 20, 1, 100),
+model_params = {"initial_victims": UserSettableParameter('slider', 'Initial Victim Population', 100, 5, 300),
+                "initial_aggressors": UserSettableParameter('slider',
+                                                            'Initial Aggressor Population', 5, 1, 50),
+                "reaction_if_has_gun": UserSettableParameter('slider',
+                                                             'Reaction if Victim has gun', 0.85, 0.01, 1.0, 0.01),
+                "prob_victims_have_gun": UserSettableParameter('slider',
+                                                               'Prob. Victims have guns', 0.85, 0.01, 1.0, 0.01),
                 "chance_death_gun": UserSettableParameter('slider',
-                                                          'Chance Victim dies if Victim has gun', 85, 1, 100)}
+                                                          'Chance Victim dies if Victim has gun',
+                                                          0.85, 0.01, 1.0, 0.01)}
 
 server = ModularServer(Guns, [canvas_element, chart_element], "Aggressor Victim Confront", model_params)
 server.port = 8521
