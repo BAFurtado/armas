@@ -12,8 +12,12 @@ from mesa import Model
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
-from guns.agents import Victim, Aggressor, Police
-from guns.schedule import RandomActivationByBreed
+try:
+    from guns.agents import Victim, Aggressor, Police
+    from guns.schedule import RandomActivationByBreed
+except ModuleNotFoundError:
+    from agents import Victim, Aggressor, Police
+    from schedule import RandomActivationByBreed
 
 
 class Guns(Model):
@@ -34,7 +38,7 @@ class Guns(Model):
     reaction_if_has_gun = 0.85
     chance_death_gun = 0.85
 
-    verbose = True  # Print-monitoring
+    verbose = False  # Print-monitoring
 
     description = 'A model for simulating the victim aggressor interaction mediated by presence of guns.'
 
@@ -42,8 +46,8 @@ class Guns(Model):
                  initial_victims=100,
                  initial_aggressors=5,
                  initial_policepersons=5,
-                 police_letality=0.50,
-                 prob_victims_have_gun=0.20,
+                 police_letality=0.5,
+                 prob_victims_have_gun=0.2,
                  reaction_if_has_gun=0.85,
                  chance_death_gun=0.85):
         """
@@ -143,3 +147,9 @@ class Guns(Model):
                   self.schedule.get_breed_count(Victim))
             print('Final number policepersons: ',
                   self.schedule.get_breed_count(Police))
+
+
+if __name__ == '__main__':
+    # Bernardo's debugging
+    mymodel = Guns()
+    mymodel.run_model()

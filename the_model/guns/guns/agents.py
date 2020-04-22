@@ -1,4 +1,7 @@
-from guns.random_walk import RandomWalker
+try:
+    from guns.random_walk import RandomWalker
+except ModuleNotFoundError:
+    from random_walk import RandomWalker
 
 
 class Victim(RandomWalker):
@@ -59,7 +62,8 @@ class Aggressor(RandomWalker):
         x, y = self.pos
         this_cell = self.model.grid.get_cell_list_contents([self.pos])
         victim = [obj for obj in this_cell if isinstance(obj, Victim)]
-        police = [obj for obj in this_cell if isinstance(obj, Police)]
+        neighbors = self.model.grid.get_neighbors(self.pos, True)
+        police = [obj for obj in neighbors if isinstance(obj, Police)]
         if len(victim) > 0:
             victim_to_attack = self.random.choice(victim)
 
@@ -72,7 +76,7 @@ class Aggressor(RandomWalker):
                 else:
                     # Police dies
                     bobby = self.random.choice(police)
-                    self.model.grid._remove_agent(self.pos, bobby)
+                    self.model.grid._remove_agent(bobby.pos, bobby)
                     self.model.schedule.remove(bobby)
 
             elif victim_to_attack.has_gun:

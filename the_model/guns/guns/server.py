@@ -2,8 +2,12 @@ from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.UserParam import UserSettableParameter
 
-from guns.agents import Aggressor, Victim, Police
-from guns.model import Guns
+try:
+    from guns.agents import Aggressor, Victim, Police
+    from guns.model import Guns
+except ModuleNotFoundError:
+    from agents import Aggressor, Victim, Police
+    from model import Guns
 
 
 def guns_portrayal(agent):
