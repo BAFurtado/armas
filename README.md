@@ -33,6 +33,7 @@ We thank David Massa e all the contributors of the mesa project
 3. Donwload e instale [https://git-scm.com/downloads] [GIT].
 4. Com todos funcionando, vá até o Terminal do PyCharm (ou command line com acesso a Python) e usando o Git, clone esse repositório:
     1. `git clone https://github.com/BAFurtado/armas.git`  
+    2. `pip install mesa`
 5. Utilize o comando `cd` para que o Terminal esteja no diretorio correto: 
     1. `~/mesa_guns/guns_model` directory
     2. Type `mesa runserver` e pronto. Se tudo foi instalado, o browser se abriu automaticamente. 
