@@ -18,21 +18,6 @@ class Person(Agent):
         pass
 
 
-class Family:
-    """
-    A family that provides the environment and contain agents who might become victims or aggressors
-    """
-
-    def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
-
-    def step(self):
-        """
-        A model step.
-        """
-        pass
-
-
 class Victim(Person):
     """
     A person from the family becomes first victimized
@@ -40,8 +25,6 @@ class Victim(Person):
 
     def __init__(self, unique_id, model, pos):
         super().__init__(unique_id, model, pos)
-
-    pass
 
 
 class Aggressor(Person):
@@ -51,4 +34,23 @@ class Aggressor(Person):
 
     def __init__(self, unique_id, model, pos):
         super().__init__(unique_id, model, pos)
-    pass
+
+
+class Family:
+    """
+    A family that provides the environment and contain agents who might become victims or aggressors
+    """
+
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+
+    def update_family_data(self):
+        pass
+
+    def step(self):
+        """
+        A model step.
+        """
+        # It will include family stress indicator update
+        # Likelihood of triggering aggression
+        # New values
