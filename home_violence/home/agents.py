@@ -10,15 +10,15 @@ class Victim(Agent):
 
     has_gun = False
 
-    def __init__(self, unique_id, pos, model, moore, has_gun=False):
-        super().__init__(unique_id, pos, model, moore=moore)
+    def __init__(self, unique_id, pos, has_gun=False):
+        super().__init__(unique_id, pos)
         self.has_gun = has_gun
 
     def step(self):
         """
         A model step. Move, awaits confront. If has gun, more likely to react and die.
         """
-        self.random_move()
+        pass
 
 
 class Police(Agent):
@@ -30,8 +30,8 @@ class Police(Agent):
 
     has_gun = True
 
-    def __init__(self, unique_id, pos, model, moore, has_gun=False):
-        super().__init__(unique_id, pos, model, moore=moore)
+    def __init__(self, unique_id, pos, has_gun=False):
+        super().__init__(unique_id, pos)
         self.has_gun = has_gun
 
     def step(self):
@@ -48,8 +48,8 @@ class Aggressor(Agent):
 
     has_gun = True
 
-    def __init__(self, unique_id, pos, model, moore, has_gun=True):
-        super().__init__(unique_id, pos, model, moore=moore)
+    def __init__(self, unique_id, pos, has_gun=True):
+        super().__init__(unique_id, pos)
         self.has_gun = has_gun
 
     def step(self):
