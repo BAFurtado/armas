@@ -59,7 +59,7 @@ class Home(Model):
         for i in range(self.initial_people):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
-            victim = Victim(self.next_id(), self, (x, y))
+            victim = Person(self.next_id(), self, (x, y))
             self.grid.place_agent(victim, (x, y))
             self.schedule.add(victim)
 
@@ -68,7 +68,7 @@ class Home(Model):
             # x, y are integers. Thus, just represent a grid cell
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
-            bobby = Person(self.next_id(), self, (x, y))
+            bobby = Family(self.next_id(), self, (x, y))
             self.grid.place_agent(bobby, (x, y))
             self.schedule.add(bobby)
 

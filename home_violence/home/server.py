@@ -4,11 +4,11 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 
 try:
-    from home.agents import Aggressor, Victim, Person
+    from home.agents import Aggressor, Victim, Person, Family
     from home.model import Home
 except ModuleNotFoundError:
     from model import Home
-    from agents import Aggressor, Victim, Person
+    from agents import Aggressor, Victim, Person, Family
 
 
 PERSON = "#0066CC"
@@ -25,20 +25,27 @@ def home_violence_portrayal(agent):
                  "Filled": "true"}
 
     if type(agent) is Person:
-        color = PERSON
-        portrayal["Color"] = color
-        portrayal["r"] = 0.8
-        portrayal["Layer"] = 0
+        portrayal["Color"] = PERSON
+        portrayal["r"] = 0.3
+        portrayal["Layer"] = 1
 
     elif type(agent) is Victim:
         portrayal["Color"] = VICTIM
-        portrayal["r"] = 0.5
-        portrayal["Layer"] = 1
+        portrayal["r"] = 0.6
+        portrayal["Layer"] = 2
 
     elif type(agent) is Aggressor:
         portrayal["Color"] = AGGRESSOR
-        portrayal["r"] = 0.5
-        portrayal["Layer"] = 1
+        portrayal["r"] = 0.8
+        portrayal["Layer"] = 3
+
+    elif type(agent) is Family:
+        portrayal["Color"] = ["#84e184", "#adebad", "#d6f5d6"]
+        portrayal["Shape"] = "rect"
+        portrayal["Filled"] = "true"
+        portrayal["Layer"] = 0
+        portrayal["w"] = 1
+        portrayal["h"] = 1
 
     return portrayal
 

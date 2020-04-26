@@ -36,13 +36,14 @@ class Aggressor(Person):
         super().__init__(unique_id, model, pos)
 
 
-class Family:
+class Family(Agent):
     """
     A family that provides the environment and contain agents who might become victims or aggressors
     """
 
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, pos):
         super().__init__(unique_id, model)
+        self.pos = pos
 
     def update_family_data(self):
         pass
