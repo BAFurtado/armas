@@ -4,62 +4,54 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 
 try:
-    from home.agents import Aggressor, Victim, Police
+    from home.agents import Aggressor, Victim, Person
     from home.model import Home
 except ModuleNotFoundError:
     from model import Home
-    from agents import Aggressor, Victim, Police
+    from agents import Aggressor, Victim, Person
 
 
-def guns_portrayal(agent):
+PERSON = "#0066CC"
+VICTIM = "#CC0000"
+AGGRESSOR = "#757575"
+
+
+def home_violence_portrayal(agent):
     if agent is None:
         return
 
-    portrayal = {}
+    portrayal = {"Shape": "circle",
+                 "x": agent.pos[0], "y": agent.pos[1],
+                 "Filled": "true"}
 
-    # aggressor "https://icons8.com/icons/set/bandit"
-    # victim "https://icons8.com/icons/set/gender-neutral-user"
-    # police "https://icons8.com/icons/set/policeman-male"
+    if type(agent) is Person:
+        color = PERSON
+        portrayal["Color"] = color
+        portrayal["r"] = 0.8
+        portrayal["Layer"] = 0
 
-    if type(agent) is Victim:
-        portrayal["Shape"] = "home/resources/person.png"
-        portrayal["scale"] = 0.9
+    elif type(agent) is Victim:
+        portrayal["Color"] = VICTIM
+        portrayal["r"] = 0.5
         portrayal["Layer"] = 1
 
     elif type(agent) is Aggressor:
-        portrayal["Shape"] = "home/resources/bandit.png"
-        portrayal["scale"] = 0.9
-        portrayal["Layer"] = 2
-        portrayal["text"] = agent.has_gun
-        portrayal["text_color"] = "White"
-
-    elif type(agent) is Police:
-        portrayal["Shape"] = "home/resources/police.png"
-        portrayal["scale"] = 0.9
-        portrayal["Layer"] = 3
+        portrayal["Color"] = AGGRESSOR
+        portrayal["r"] = 0.5
+        portrayal["Layer"] = 1
 
     return portrayal
 
 
-canvas_element = CanvasGrid(guns_portrayal, 20, 20, 500, 500)
-chart_element = ChartModule([{"Label": "Aggressors", "Color": "#AA0000"},
-                             {"Label": "Victims", "Color": "#666666"},
-                             {"Label": "Policepersons", "Color": "#CCCC00"}])
+model_params = dict(height=40,
+                    width=40)
 
-model_params = {"initial_victims": UserSettableParameter('slider', 'Initial Victim Population', 100, 5, 300),
-                "initial_aggressors": UserSettableParameter('slider',
-                                                            'Initial Aggressor Population', 5, 1, 50),
-                "initial_policepersons": UserSettableParameter('slider',
-                                                            'Initial Policer Population', 5, 1, 50),
-                "police_letality": UserSettableParameter('slider',
-                                                         'Police Letality', 0.5, 0.01, 1.0, 0.01),
-                "reaction_if_has_gun": UserSettableParameter('slider',
-                                                             'Reaction if Victim has gun', 0.85, 0.01, 1.0, 0.01),
-                "prob_victims_have_gun": UserSettableParameter('slider',
-                                                               'Prob. Victims have home', 0.85, 0.01, 1.0, 0.01),
-                "chance_death_gun": UserSettableParameter('slider',
-                                                          'Chance Victim dies if Victim has gun',
-                                                          0.85, 0.01, 1.0, 0.01)}
+canvas_element = CanvasGrid(home_violence_portrayal, 40, 40, 480, 480)
+chart_element = ChartModule([{"Label": "Aggressors", "Color": AGGRESSOR},
+                             {"Label": "Victims", "Color": VICTIM},
+                             {"Label": "People", "Color": PERSON}])
 
-server = ModularServer(Home, [canvas_element, chart_element], "Aggressor Victim Confront", model_params)
+model_params = {"initial_victims": UserSettableParameter('slider', 'Initial Population', 100, 5, 300)}
+
+server = ModularServer(Home, [canvas_element, chart_element], "Home Violence", model_params)
 server.port = 8521
