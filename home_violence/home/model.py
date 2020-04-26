@@ -13,8 +13,8 @@ from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
 try:
-    from guns.agents import Victim, Aggressor, Police
-    from guns.schedule import RandomActivationByBreed
+    from home.agents import Victim, Aggressor, Police
+    from home.schedule import RandomActivationByBreed
 except ModuleNotFoundError:
     from agents import Victim, Aggressor, Police
     from schedule import RandomActivationByBreed

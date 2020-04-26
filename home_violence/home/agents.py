@@ -1,10 +1,7 @@
-try:
-    from guns.random_walk import RandomWalker
-except ModuleNotFoundError:
-    from random_walk import RandomWalker
+from mesa.agent import Agent
 
 
-class Victim(RandomWalker):
+class Victim(Agent):
     """
     A victim that walks around, incurs in chance of getting mugged.
 
@@ -24,7 +21,7 @@ class Victim(RandomWalker):
         self.random_move()
 
 
-class Police(RandomWalker):
+class Police(Agent):
     """
     A policeperson that walks around, intervenes in incidents when happening around a moore buffer of one cell.
 
@@ -41,10 +38,10 @@ class Police(RandomWalker):
         """
         A model step. Move, awaits confront. If has gun, more likely to react and die.
         """
-        self.random_move()
+        pass
 
 
-class Aggressor(RandomWalker):
+class Aggressor(Agent):
     """
     An aggressor that walks around, looking for victims.
     """
@@ -56,7 +53,7 @@ class Aggressor(RandomWalker):
         self.has_gun = has_gun
 
     def step(self):
-        self.random_move()
+        pass
 
         # If there are victims present, confront one
         x, y = self.pos

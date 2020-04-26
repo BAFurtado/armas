@@ -1,3 +1,3 @@
-from guns.server import server
+from home.server import server
 
 server.launch()
