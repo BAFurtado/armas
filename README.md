@@ -1,4 +1,4 @@
-#### Proposta inicial de análise dos efeitos da posse de armas de fogo em homicídios. 
+#### Análise crimininalidade e violência com modelos baseados em agentes -- ABMs
 
 "Traditionally, researchers have employed statistical methods to model crime. However, these approaches
 are limited by being unable to model individual actions and behaviour. ... [a model should] attempt to model
@@ -6,13 +6,26 @@ the occurrence of crimes and motivations behind it. ... **explore the potential 
 simulate the main processes and drivers within this system**." (Malleson, Heppenstall, See, 2009).  
 
 We developed the model on top of [https://github.com/projectmesa/mesa] mesa wolf_sheep example
-We thank David Massa e all the contributors of the mesa project
+We thank David Massa e all the contributors of the mesa project. See folder `guns_model`
 
 **Alan Rafael Dill**
 
 **Lígia Mori Madeira**
 
 **Bernardo Alves Furtado**
+
+We are considering: 
+
+
+### Home violence model
+
+An exploratory **stay-at-home-COVID-increased-violence** model. See folder `home_violence`
+
+###### Under construction
+
+### Gun-reaction model
+
+See folder `guns_model`
 
 1. A partir do modelo simples, descrito em Proposta.docx, construímos três classes de agentes.
 2. Vítimas, Agressores e Policiais
@@ -25,7 +38,7 @@ We thank David Massa e all the contributors of the mesa project
             1. Se há reação da vítima, 
                 1. Morre vítima ou agressor  
 
-### To run the model:
+#### To run the model:
 #### Para rodar o modelo, desde o início
 
 1. Preferencialmente, download e instale Python, via [https://www.anaconda.com/distribution] conda. No mínimo, tenha Pyton3 instalado
