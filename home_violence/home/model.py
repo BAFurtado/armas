@@ -91,7 +91,7 @@ class Home(Model):
             self.grid.place_agent(victim, (x, y))
             self.schedule.add(victim)
 
-        # Create police:
+        # Allocate people into families:
         for i in range(self.initial_policepersons):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
@@ -99,15 +99,6 @@ class Home(Model):
             bobby = Police(self.next_id(), (x, y), self, True, has_gun)
             self.grid.place_agent(bobby, (x, y))
             self.schedule.add(bobby)
-
-        # Create aggressors
-        for i in range(self.initial_aggressors):
-            x = self.random.randrange(self.width)
-            y = self.random.randrange(self.height)
-            has_gun = True
-            aggressor = Aggressor(self.next_id(), (x, y), self, True, has_gun)
-            self.grid.place_agent(aggressor, (x, y))
-            self.schedule.add(aggressor)
 
         self.running = True
         self.datacollector.collect(self)
@@ -152,5 +143,5 @@ class Home(Model):
 
 if __name__ == '__main__':
     # Bernardo's debugging
-    mymodel = Guns()
+    mymodel = Home()
     mymodel.run_model()
