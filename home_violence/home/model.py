@@ -20,9 +20,9 @@ except ModuleNotFoundError:
     from schedule import RandomActivationByBreed
 
 
-class Guns(Model):
+class Home(Model):
     """
-    A Gun Possession Model
+    A Home Violence Simulation Model
     """
 
     height = 20
@@ -86,7 +86,8 @@ class Guns(Model):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
             has_gun = True if self.random.random() < self.prob_victims_have_gun else False
-            victim = Victim(self.next_id(), (x, y), self, True, has_gun)
+            # victim = Victim(self.next_id(), (x, y), self, True, has_gun)
+            victim = Victim(self.next_id(), (x, y), self)
             self.grid.place_agent(victim, (x, y))
             self.schedule.add(victim)
 

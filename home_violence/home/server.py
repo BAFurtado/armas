@@ -5,9 +5,9 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 try:
     from home.agents import Aggressor, Victim, Police
-    from home.model import Guns
+    from home.model import Home
 except ModuleNotFoundError:
-    from model import Guns
+    from model import Home
     from agents import Aggressor, Victim, Police
 
 
@@ -61,5 +61,5 @@ model_params = {"initial_victims": UserSettableParameter('slider', 'Initial Vict
                                                           'Chance Victim dies if Victim has gun',
                                                           0.85, 0.01, 1.0, 0.01)}
 
-server = ModularServer(Guns, [canvas_element, chart_element], "Aggressor Victim Confront", model_params)
+server = ModularServer(Home, [canvas_element, chart_element], "Aggressor Victim Confront", model_params)
 server.port = 8521
