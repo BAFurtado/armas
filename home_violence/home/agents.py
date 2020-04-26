@@ -10,8 +10,8 @@ class Victim(Agent):
 
     has_gun = False
 
-    def __init__(self, unique_id, pos):
-        super().__init__(unique_id, pos)
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
 
     def step(self):
         """
@@ -48,7 +48,6 @@ class Aggressor(Agent):
 
     def __init__(self, unique_id, pos, model):
         super().__init__(unique_id, pos, model)
-
 
     def step(self):
         pass
