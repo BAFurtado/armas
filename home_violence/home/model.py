@@ -28,22 +28,22 @@ class Home(Model):
     verbose = False  # Print-monitoring
     description = 'A model for simulating the victim aggressor interaction mediated by presence of home.'
 
-    def __init__(self, height=20, width=20,
-                 initial_persons=100,
-                 initial_families=10):
+    def __init__(self, height=40, width=40,
+                 initial_people=100,
+                 initial_families=400):
         """
         Create a new Guns model with the given parameters.
 
         Args:
-            initial_victims: Number of potential victims to start with
-            initial_aggressors: Number of aggressors to start with
+            initial_families: Number of families to start with
+            initial_people: Number of people to start with
 
         """
         super().__init__()
         # Set parameters
         self.height = height
         self.width = width
-        self.initial_persons = initial_persons
+        self.initial_people = initial_people
         self.initial_families = initial_families
 
         self.schedule = RandomActivationByBreed(self)
@@ -55,23 +55,20 @@ class Home(Model):
              "Victims": lambda m: m.schedule.get_breed_count(Victim),
              "People": lambda m: m.schedule.get_breed_count(Person)})
 
-        # Create victims:
-        for i in range(self.initial_victims):
+        # Create people:
+        for i in range(self.initial_people):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
-            has_gun = True if self.random.random() < self.prob_victims_have_gun else False
-            # victim = Victim(self.next_id(), (x, y), self, True, has_gun)
-            victim = Victim(self.next_id(), self)
+            victim = Victim(self.next_id(), self, (x, y))
             self.grid.place_agent(victim, (x, y))
             self.schedule.add(victim)
 
         # Allocate people into families:
-        for i in range(self.initial_policepersons):
+        for i in range(self.initial_families):
             # x, y are integers. Thus, just represent a grid cell
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
-            has_gun = True
-            bobby = Police(self.next_id(), (x, y), self, True, has_gun)
+            bobby = Person(self.next_id(), self, (x, y))
             self.grid.place_agent(bobby, (x, y))
             self.schedule.add(bobby)
 
@@ -97,12 +94,12 @@ class Home(Model):
     def run_model(self, step_count=200):
 
         if self.verbose:
-            print('Initial number aggressors: ',
+            print('Initial number of aggressors: ',
                   self.schedule.get_breed_count(Aggressor))
-            print('Initial number victims: ',
+            print('Initial number of victims: ',
                   self.schedule.get_breed_count(Victim))
-            print('Initial number policepersons: ',
-                  self.schedule.get_breed_count(Police))
+            print('Initial number of people: ',
+                  self.schedule.get_breed_count(Person))
 
         # Steps are not being set here, but on superclass. Changes should be made in the step function above!
         for i in range(step_count):
@@ -115,10 +112,10 @@ class Home(Model):
             print('Final number victims: ',
                   self.schedule.get_breed_count(Victim))
             print('Final number policepersons: ',
-                  self.schedule.get_breed_count(Police))
+                  self.schedule.get_breed_count(Person))
 
 
 if __name__ == '__main__':
     # Bernardo's debugging
-    mymodel = Home()
-    mymodel.run_model()
+    my_model = Home()
+    my_model.run_model()

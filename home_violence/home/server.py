@@ -51,7 +51,8 @@ chart_element = ChartModule([{"Label": "Aggressors", "Color": AGGRESSOR},
                              {"Label": "Victims", "Color": VICTIM},
                              {"Label": "People", "Color": PERSON}])
 
-model_params = {"initial_victims": UserSettableParameter('slider', 'Initial Population', 100, 5, 300)}
+model_params = {"initial_families": UserSettableParameter('slider', 'Initial Families', 100, 5, 300),
+                "initial_people": UserSettableParameter('slider', 'Initial People', 400, 5, 300)}
 
 server = ModularServer(Home, [canvas_element, chart_element], "Home Violence", model_params)
 server.port = 8521
