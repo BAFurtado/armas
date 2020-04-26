@@ -40,7 +40,7 @@ class Guns(Model):
 
     verbose = False  # Print-monitoring
 
-    description = 'A model for simulating the victim aggressor interaction mediated by presence of guns.'
+    description = 'A model for simulating the victim aggressor interaction mediated by presence of home.'
 
     def __init__(self, height=20, width=20,
                  initial_victims=100,

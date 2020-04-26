@@ -21,19 +21,19 @@ def guns_portrayal(agent):
     # police "https://icons8.com/icons/set/policeman-male"
 
     if type(agent) is Victim:
-        portrayal["Shape"] = "guns/resources/person.png"
+        portrayal["Shape"] = "home/resources/person.png"
         portrayal["scale"] = 0.9
         portrayal["Layer"] = 1
 
     elif type(agent) is Aggressor:
-        portrayal["Shape"] = "guns/resources/bandit.png"
+        portrayal["Shape"] = "home/resources/bandit.png"
         portrayal["scale"] = 0.9
         portrayal["Layer"] = 2
         portrayal["text"] = agent.has_gun
         portrayal["text_color"] = "White"
 
     elif type(agent) is Police:
-        portrayal["Shape"] = "guns/resources/police.png"
+        portrayal["Shape"] = "home/resources/police.png"
         portrayal["scale"] = 0.9
         portrayal["Layer"] = 3
 
@@ -55,7 +55,7 @@ model_params = {"initial_victims": UserSettableParameter('slider', 'Initial Vict
                 "reaction_if_has_gun": UserSettableParameter('slider',
                                                              'Reaction if Victim has gun', 0.85, 0.01, 1.0, 0.01),
                 "prob_victims_have_gun": UserSettableParameter('slider',
-                                                               'Prob. Victims have guns', 0.85, 0.01, 1.0, 0.01),
+                                                               'Prob. Victims have home', 0.85, 0.01, 1.0, 0.01),
                 "chance_death_gun": UserSettableParameter('slider',
                                                           'Chance Victim dies if Victim has gun',
                                                           0.85, 0.01, 1.0, 0.01)}
