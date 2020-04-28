@@ -32,7 +32,7 @@ class Home(Model):
                  initial_people=100,
                  initial_families=400,
                  gender_stress=0.80,
-                 violence_threshold=0.90):
+                 violence_threshold=0.50):
         """
         Create a new Guns model with the given parameters.
 

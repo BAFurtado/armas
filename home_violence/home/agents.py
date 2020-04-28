@@ -1,10 +1,6 @@
 from mesa.agent import Agent
 
-
-# TODO: Define agents attributes and update stress_indicator
-# TODO: Function probability to trigger violent action
-# TODO: As a result of violence, we have new inherited agents: aggressors and victims
-# TODO: Stress_indicator is at the level of the family or the agent, or both?
+# TODO: Create families [location_families_agents], step: update_work, run.
 
 
 class Person(Agent):
@@ -65,21 +61,24 @@ class Person(Agent):
         self.update_stress()
         if self.assaulted == 0:
             if self.stress > self.model.violence_threshold:
+                m = self.model
                 # Transforming a person into an aggressor
-                new_aggressor = Aggressor(self.unique_id, self.model, self.pos)
-                self.model.grid.place_agent(new_aggressor, self.pos)
-                self.model.schedule.add(new_aggressor)
-                self.model.grid._remove_agent(self.pos, self)
-                self.model.schedule.remove(self)
+                new_aggressor = Aggressor(self.unique_id, self.model, self.pos,
+                                          spouse=self.spouse, family=self.family)
+                m.grid._remove_agent(self.pos, self)
+                m.schedule.remove(self)
+                m.grid.place_agent(new_aggressor, new_aggressor.pos)
+                m.schedule.add(new_aggressor)
                 new_aggressor.assaulted += 1
 
                 # Transforming a person into victim
                 victim = self.spouse
-                new_victim = Victim(victim.unique_id, victim.model, victim.pos)
-                self.model.grid.place_agent(new_victim, self.pos)
-                self.model.schedule.add(new_victim)
-                self.model.grid._remove_agent(victim.pos, victim)
-                self.model.schedule.remove(victim)
+                new_victim = Victim(victim.unique_id, victim.model, victim.pos,
+                                    spouse=victim.spouse, family=victim.family)
+                m.grid.place_agent(new_victim, new_victim.pos)
+                m.schedule.add(new_victim)
+                m.grid._remove_agent(victim.pos, victim)
+                m.schedule.remove(victim)
                 new_victim.got_attacked += 1
 
         else:
@@ -95,8 +94,8 @@ class Victim(Person):
     A person from the family becomes first victimized
     """
 
-    def __init__(self, unique_id, model, pos):
-        super().__init__(unique_id, model, pos)
+    def __init__(self, unique_id, model, pos, spouse, family):
+        super().__init__(unique_id, model, pos, spouse, family)
 
 
 class Aggressor(Person):
@@ -104,8 +103,10 @@ class Aggressor(Person):
     A person from the family makes first aggression
     """
 
-    def __init__(self, unique_id, model, pos):
-        super().__init__(unique_id, model, pos)
+    def __init__(self, unique_id, model, pos, spouse, family):
+        super().__init__(unique_id, model, pos, spouse, family)
+        self.spouse = spouse
+        self.family = family
 
 
 class Family(Agent):
@@ -137,10 +138,11 @@ if __name__ == '__main__':
     # Bernardo's debugging model
     from home_violence.home.model import Home
     m1 = Home()
-    bob = Person(0, m1, (1, 1))
-    maria = Person(1, m1, (1, 1), gender='female', wage=.7, is_working=True)
-    f1 = Family(0, m1, (1, 1))
+    bob = m1.schedule.agents[0]
+    maria = m1.schedule.agents[1]
+    f1 = Family(m1.next_id(), m1, (1, 1))
     f1.add_agent(bob)
     f1.add_agent(maria)
     bob.assign_spouse(maria)
     bob.update_stress()
+    bob.trigger_violence()
