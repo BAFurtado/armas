@@ -56,6 +56,7 @@ class Home(Model):
              "People": lambda m: m.schedule.get_breed_count(Person)})
 
         # Create people:
+        # TODO: Create agents, allocate them into families
         for i in range(self.initial_people):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
