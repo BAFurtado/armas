@@ -30,7 +30,9 @@ class Home(Model):
 
     def __init__(self, height=40, width=40,
                  initial_people=100,
-                 initial_families=400):
+                 initial_families=400,
+                 gender_stress=0.80,
+                 violence_threshold=0.90):
         """
         Create a new Guns model with the given parameters.
 
@@ -45,6 +47,9 @@ class Home(Model):
         self.width = width
         self.initial_people = initial_people
         self.initial_families = initial_families
+
+        self.gender_stress = gender_stress
+        self.violence_threshold = violence_threshold
 
         self.schedule = RandomActivationByBreed(self)
         self.grid = MultiGrid(self.height, self.width, torus=True)
