@@ -1,6 +1,7 @@
 from mesa.agent import Agent
 
-# TODO: Create families [location_families_agents], step: update_work, run.
+# TODO: Create families [location_families_agents],
+# TODO: step: update_work, run.
 
 
 class Person(Agent):
@@ -9,10 +10,11 @@ class Person(Agent):
 
     """
 
-    def __init__(self, unique_id, model, pos, gender='male', is_working=False, wage=.5):
+    def __init__(self, unique_id, model, pos, gender='male', age=25, is_working=False, wage=.5):
         super().__init__(unique_id, model)
         self.pos = pos
         self.gender = gender
+        self.age = age
         self.is_working = is_working
         self.wage = wage
         self.spouse = None
@@ -58,9 +60,15 @@ class Person(Agent):
         """
         Uses self stress and family context to incur in probability of becoming violent
         """
-        self.update_stress()
+        # TODO: Change age filter before goes through steps
+        if self.age > 18:
+            self.update_stress()
+        else:
+            return
+
+        # First time offender get registered in the system and changes class as an Aggressor and a Victim
         if self.assaulted == 0:
-            if self.stress > self.model.violence_threshold:
+            if self.stress > self.random.random():
                 m = self.model
                 # Transforming a person into an aggressor
                 new_aggressor = Aggressor(self.unique_id, self.model, self.pos,
@@ -81,7 +89,8 @@ class Person(Agent):
                 m.schedule.remove(victim)
                 new_victim.got_attacked += 1
 
-        else:
+        # Second-time offender, checks to see if it is a recidivist.
+        elif self.stress > self.random.random():
             self.assaulted += 1
             self.spouse.got_attacked += 1
 

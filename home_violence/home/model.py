@@ -7,7 +7,7 @@ Directly adapted from mesa example which is inspired by the model found in NetLo
     Center for Connected Learning and Computer-Based Modeling,
     Northwestern University, Evanston, IL.
 """
-
+import numpy as np
 from mesa import Model
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
@@ -29,10 +29,9 @@ class Home(Model):
     description = 'A model for simulating the victim aggressor interaction mediated by presence of home.'
 
     def __init__(self, height=40, width=40,
-                 initial_people=100,
                  initial_families=400,
                  gender_stress=0.80,
-                 violence_threshold=0.50):
+                 is_working_pct=0.80):
         """
         Create a new Guns model with the given parameters.
 
@@ -45,11 +44,10 @@ class Home(Model):
         # Set parameters
         self.height = height
         self.width = width
-        self.initial_people = initial_people
         self.initial_families = initial_families
 
         self.gender_stress = gender_stress
-        self.violence_threshold = violence_threshold
+        self.is_working_pct = is_working_pct
 
         self.schedule = RandomActivationByBreed(self)
         self.grid = MultiGrid(self.height, self.width, torus=True)
@@ -60,23 +58,32 @@ class Home(Model):
              "Victims": lambda m: m.schedule.get_breed_count(Victim),
              "People": lambda m: m.schedule.get_breed_count(Person)})
 
+        # TODO: check if necessary to rearange all randoms towards numpy.random
         # Create people:
-        # TODO: Create agents, allocate them into families
-        for i in range(self.initial_people):
-            x = self.random.randrange(self.width)
-            y = self.random.randrange(self.height)
-            victim = Person(self.next_id(), self, (x, y))
-            self.grid.place_agent(victim, (x, y))
-            self.schedule.add(victim)
-
-        # Allocate people into families:
         for i in range(self.initial_families):
-            # x, y are integers. Thus, just represent a grid cell
+            # 1. Create a family. Create a couple, add to the family
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
-            bobby = Family(self.next_id(), self, (x, y))
-            self.grid.place_agent(bobby, (x, y))
-            self.schedule.add(bobby)
+            family = Family(self.next_id(), self, (x, y))
+            for gender in ['male', 'female']:
+                adult = Person(self.next_id(), self, (x, y), gender=gender,
+                               age=round(self.random.triangular(19, 80, 34)),
+                               is_working=np.random.choice([True, False],
+                                                           p=[self.is_working_pct, 1 - self.is_working_pct]),
+                               wage=np.random.beta(2, 5))
+                self.grid.place_agent(adult, (x, y))
+                self.schedule.add(adult)
+                family.add_agent(adult)
+            # 2. Create some children, Add to the family
+            num_children = round(self.random.triangular(0, 5, 1.8))
+            for ch in range(num_children):
+                child = Person(self.next_id(), self, (x, y), gender=np.random.choice(['female', 'male'], p=[.6, .4]),
+                               age=round(self.random.triangular(0, 18, 9)),
+                               is_working=False,
+                               wage=0)
+                self.grid.place_agent(child, (x, y))
+                self.schedule.add(child)
+                family.add_agent(child)
 
         self.running = True
         self.datacollector.collect(self)
