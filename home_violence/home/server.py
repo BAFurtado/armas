@@ -4,11 +4,11 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 
 try:
-    from home.agents import Aggressor, Victim, Person, Family
+    from home.agents import Person, Family
     from home.model import Home
 except ModuleNotFoundError:
     from model import Home
-    from agents import Aggressor, Victim, Person, Family
+    from agents import Person, Family
 
 
 PERSON = "#0066CC"
@@ -26,23 +26,24 @@ def home_violence_portrayal(agent):
                  "Filled": "true"}
 
     if type(agent) is Person:
-        if agent.age < 19:
-            portrayal["Color"] = CHILD
-            portrayal["r"] = 0.3
-        else:
-            portrayal["Color"] = PERSON
-            portrayal["r"] = 0.5
-        portrayal["Layer"] = 1
+        if agent.type == 'person':
+            if agent.age < 19:
+                portrayal["Color"] = CHILD
+                portrayal["r"] = 0.3
+            else:
+                portrayal["Color"] = PERSON
+                portrayal["r"] = 0.5
+            portrayal["Layer"] = 1
 
-    elif type(agent) is Victim:
-        portrayal["Color"] = VICTIM
-        portrayal["r"] = 0.7
-        portrayal["Layer"] = 2
+        elif agent.type == 'victim':
+            portrayal["Color"] = VICTIM
+            portrayal["r"] = 0.7
+            portrayal["Layer"] = 2
 
-    elif type(agent) is Aggressor:
-        portrayal["Color"] = AGGRESSOR
-        portrayal["r"] = 0.8
-        portrayal["Layer"] = 3
+        elif agent.type == 'aggressor':
+            portrayal["Color"] = AGGRESSOR
+            portrayal["r"] = 0.8
+            portrayal["Layer"] = 3
 
     elif type(agent) is Family:
         portrayal["Color"] = ["#84e184", "#adebad", "#d6f5d6"]
@@ -69,7 +70,7 @@ model_params = {"initial_families": UserSettableParameter('slider', 'Initial Fam
                                                                         'Chance of Changing Working Status',
                                                                         0.0, 0.05, 0.1, 0.005),
                 "pct_change_wage": UserSettableParameter('slider', 'Percentage of Changing Wage Chance',
-                                                                        0.0, 0.05, 0.1, 0.005)
+                                                         0.0, 0.05, 0.1, 0.005)
                 }
 
 server = ModularServer(Home, [canvas_element, chart_element], "Home Violence", model_params)

@@ -1,7 +1,5 @@
 from mesa.agent import Agent
 
-# TODO: step: update_work, run.
-
 
 class Person(Agent):
     """
@@ -9,7 +7,7 @@ class Person(Agent):
 
     """
 
-    def __init__(self, unique_id, model, pos, gender='male', age=25, is_working=False, wage=.5):
+    def __init__(self, unique_id, model, pos, gender='male', age=25, is_working=False, wage=.5, type='person'):
         super().__init__(unique_id, model)
         self.pos = pos
         self.gender = gender
@@ -23,6 +21,7 @@ class Person(Agent):
         self.family = None
         self.num_members_family = 1
         self.stress = 0
+        self.type = type
 
     def step(self):
         """
@@ -77,25 +76,10 @@ class Person(Agent):
         # First time offender get registered in the system and changes class as an Aggressor and a Victim
         if self.assaulted == 0:
             if self.stress > self.random.random():
-                m = self.model
-                # Transforming a person into an aggressor
-                new_aggressor = Aggressor(self.unique_id, self.model, self.pos,
-                                          spouse=self.spouse, family=self.family)
-                m.grid._remove_agent(self.pos, self)
-                m.schedule.remove(self)
-                m.grid.place_agent(new_aggressor, new_aggressor.pos)
-                m.schedule.add(new_aggressor)
-                new_aggressor.assaulted += 1
-
-                # Transforming a person into victim
-                victim = self.spouse
-                new_victim = Victim(victim.unique_id, victim.model, victim.pos,
-                                    spouse=victim.spouse, family=victim.family)
-                m.grid.place_agent(new_victim, new_victim.pos)
-                m.schedule.add(new_victim)
-                m.grid._remove_agent(victim.pos, victim)
-                m.schedule.remove(victim)
-                new_victim.got_attacked += 1
+                self.type = 'aggressor'
+                self.assaulted += 1
+                self.spouse.type = 'victim'
+                self.spouse.got_attacked += 1
 
         # Second-time offender, checks to see if it is a recidivist.
         elif self.stress > self.random.random():
@@ -104,26 +88,6 @@ class Person(Agent):
 
     def trigger_call_help(self):
         pass
-
-
-class Victim(Person):
-    """
-    A person from the family becomes first victimized
-    """
-
-    def __init__(self, unique_id, model, pos, spouse, family):
-        super().__init__(unique_id, model, pos, spouse, family)
-
-
-class Aggressor(Person):
-    """
-    A person from the family makes first aggression
-    """
-
-    def __init__(self, unique_id, model, pos, spouse, family):
-        super().__init__(unique_id, model, pos, spouse, family)
-        self.spouse = spouse
-        self.family = family
 
 
 class Family(Agent):
@@ -162,4 +126,6 @@ if __name__ == '__main__':
     f1.add_agent(maria)
     bob.assign_spouse(maria)
     bob.update_stress()
+    bob.trigger_violence()
+    bob.stress = 1
     bob.trigger_violence()

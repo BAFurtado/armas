@@ -13,10 +13,10 @@ from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
 try:
-    from home.agents import Victim, Aggressor, Person, Family
+    from home.agents import Person, Family
     from home.schedule import RandomActivationByBreed
 except ModuleNotFoundError:
-    from agents import Victim, Aggressor, Person, Family
+    from agents import Person, Family
     from schedule import RandomActivationByBreed
 
 
@@ -69,6 +69,7 @@ class Home(Model):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
             family = Family(self.next_id(), self, (x, y))
+            to_marry = list()
             for gender in ['male', 'female']:
                 adult = Person(self.next_id(), self, (x, y), gender=gender,
                                age=round(self.random.triangular(19, 80, 34)),
@@ -78,7 +79,10 @@ class Home(Model):
                 self.grid.place_agent(adult, (x, y))
                 self.schedule.add(adult)
                 family.add_agent(adult)
-            # 2. Create some children, Add to the family
+                to_marry.append(adult)
+            # 2. Marry the couple
+            to_marry[0].assign_spouse(to_marry[1])
+            # 3. Create some children, Add to the family
             num_children = round(self.random.triangular(0, 5, 1.8))
             for ch in range(num_children):
                 child = Person(self.next_id(), self, (x, y), gender=np.random.choice(['female', 'male'], p=[.6, .4]),
