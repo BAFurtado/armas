@@ -12,6 +12,7 @@ except ModuleNotFoundError:
 
 
 PERSON = "#0066CC"
+CHILD = "#ff5733"
 VICTIM = "#CC0000"
 AGGRESSOR = "#757575"
 
@@ -25,13 +26,17 @@ def home_violence_portrayal(agent):
                  "Filled": "true"}
 
     if type(agent) is Person:
-        portrayal["Color"] = PERSON
-        portrayal["r"] = 0.3
+        if agent.age < 19:
+            portrayal["Color"] = CHILD
+            portrayal["r"] = 0.3
+        else:
+            portrayal["Color"] = PERSON
+            portrayal["r"] = 0.5
         portrayal["Layer"] = 1
 
     elif type(agent) is Victim:
         portrayal["Color"] = VICTIM
-        portrayal["r"] = 0.6
+        portrayal["r"] = 0.7
         portrayal["Layer"] = 2
 
     elif type(agent) is Aggressor:
@@ -58,7 +63,14 @@ chart_element = ChartModule([{"Label": "Aggressors", "Color": AGGRESSOR},
                              {"Label": "Victims", "Color": VICTIM},
                              {"Label": "People", "Color": PERSON}])
 
-model_params = {"initial_families": UserSettableParameter('slider', 'Initial Families', 100, 5, 300)}
+model_params = {"initial_families": UserSettableParameter('slider', 'Initial Families', 100, 5, 300),
+                "is_working_pct": UserSettableParameter('slider', 'Percentage Employed', 0.8, 0.01, 1.0, 0.01),
+                "chance_changing_working_status": UserSettableParameter('slider',
+                                                                        'Chance of Changing Working Status',
+                                                                        0.0, 0.05, 0.1, 0.005),
+                "pct_change_wage": UserSettableParameter('slider', 'Percentage of Changing Wage Chance',
+                                                                        0.0, 0.05, 0.1, 0.005)
+                }
 
 server = ModularServer(Home, [canvas_element, chart_element], "Home Violence", model_params)
 server.port = 8521

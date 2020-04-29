@@ -1,6 +1,5 @@
 from mesa.agent import Agent
 
-# TODO: Create families [location_families_agents],
 # TODO: step: update_work, run.
 
 
@@ -29,7 +28,16 @@ class Person(Agent):
         """
         A model step.
         """
+        # Check and execute
         self.trigger_violence()
+
+    def step_change(self):
+        # How conditions that cause stress change?
+        changes = self.random.random()
+        if changes < self.model.chance_changing_working_status:
+            self.is_working = not self.is_working
+        if changes < self.model.pct_change_wage:
+            self.wage *= self.model.random.uniform(-self.model.pct_change_wage, self.model.pct_change_wage)
 
     def assign_spouse(self, agent):
         self.spouse = agent
