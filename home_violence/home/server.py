@@ -11,9 +11,11 @@ except ModuleNotFoundError:
     from agents import Person, Family
 
 
-PERSON = "#0066CC"
-CHILD = "#ff5733"
+# strong blue
+ADULT = "#0066CC"
+# strong red
 VICTIM = "#CC0000"
+# dark grey
 AGGRESSOR = "#757575"
 
 
@@ -23,27 +25,23 @@ def home_violence_portrayal(agent):
 
     portrayal = {"Shape": "circle",
                  "x": agent.pos[0], "y": agent.pos[1],
-                 "Filled": "true"}
+                 "Filled": "false"}
 
     if type(agent) is Person:
         if agent.type == 'person':
-            if agent.age < 19:
-                portrayal["Color"] = CHILD
-                portrayal["r"] = 0.3
-            else:
-                portrayal["Color"] = PERSON
-                portrayal["r"] = 0.5
-            portrayal["Layer"] = 1
+            portrayal["Color"] = ADULT
+            portrayal["r"] = 0.85
+            portrayal["Layer"] = 0
 
         elif agent.type == 'victim':
             portrayal["Color"] = VICTIM
             portrayal["r"] = 0.7
-            portrayal["Layer"] = 2
+            portrayal["Layer"] = 1
 
         elif agent.type == 'aggressor':
             portrayal["Color"] = AGGRESSOR
-            portrayal["r"] = 0.8
-            portrayal["Layer"] = 3
+            portrayal["r"] = 0.3
+            portrayal["Layer"] = 2
 
     elif type(agent) is Family:
         portrayal["Color"] = ["#84e184", "#adebad", "#d6f5d6"]
@@ -56,13 +54,12 @@ def home_violence_portrayal(agent):
     return portrayal
 
 
-model_params = dict(height=40,
-                    width=40)
+model_params = dict(height=40, width=40)
 
 canvas_element = CanvasGrid(home_violence_portrayal, 40, 40, 480, 480)
-chart_element = ChartModule([{"Label": "Aggressors", "Color": AGGRESSOR},
-                             {"Label": "Victims", "Color": VICTIM},
-                             {"Label": "People", "Color": PERSON}])
+chart_element = ChartModule([{"Label": "Person", "Color": ADULT},
+                             {"Label": "Aggressor", "Color": AGGRESSOR},
+                             {"Label": "Victim", "Color": VICTIM}])
 
 model_params = {"initial_families": UserSettableParameter('slider', 'Initial Families', 100, 5, 300),
                 "is_working_pct": UserSettableParameter('slider', 'Percentage Employed', 0.8, 0.01, 1.0, 0.01),

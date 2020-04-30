@@ -55,12 +55,11 @@ class Home(Model):
 
         self.schedule = RandomActivationByBreed(self)
         self.grid = MultiGrid(self.height, self.width, torus=True)
-        # It is here that we provide data for the DataCollector. It will be then retrieved from key "Wolves" within
-        # ChartModule at server.py and sent ver to as a canvas element
-        self.datacollector = DataCollector(
-            {"Aggressors": lambda m: m.schedule.get_breed_count(Aggressor),
-             "Victims": lambda m: m.schedule.get_breed_count(Victim),
-             "People": lambda m: m.schedule.get_breed_count(Person)})
+        model_reporters = {
+            "Person": lambda m: self.count_type_citizens(m, "person"),
+            "Victim": lambda m: self.count_type_citizens(m, "victim"),
+            "Aggressor": lambda m: self.count_type_citizens(m, "aggressor")}
+        self.datacollector = DataCollector(model_reporters=model_reporters)
 
         # TODO: check if necessary to rearange all randoms towards numpy.random
         # Create people:
@@ -104,23 +103,27 @@ class Home(Model):
         # Check if step will happen at individual levels or at family levels or BOTH
         if self.verbose:
             print([self.schedule.time,
-                   self.schedule.get_breed_count(Aggressor),
-                   self.schedule.get_breed_count(Victim),
                    self.schedule.get_breed_count(Person)])
 
         # New condition to stop the model
-        if self.schedule.get_breed_count(Victim) == 0 or self.schedule.get_breed_count(Aggressor) == 0:
+        if self.schedule.get_breed_count(Person) == 0:
             self.running = False
+
+    @staticmethod
+    def count_type_citizens(model, condition):
+        """
+        Helper method to count agents by Type.
+        """
+        count = 0
+        for agent in model.schedule.agents:
+            if agent.type == condition:
+                count += 1
+        return count
 
     def run_model(self, step_count=200):
 
         if self.verbose:
-            print('Initial number of aggressors: ',
-                  self.schedule.get_breed_count(Aggressor))
-            print('Initial number of victims: ',
-                  self.schedule.get_breed_count(Victim))
-            print('Initial number of people: ',
-                  self.schedule.get_breed_count(Person))
+            print('Initial number of people: ', self.schedule.get_breed_count(Person))
 
         # Steps are not being set here, but on superclass. Changes should be made in the step function above!
         for i in range(step_count):
@@ -128,12 +131,7 @@ class Home(Model):
 
         if self.verbose:
             print('')
-            print('Final number aggressors: ',
-                  self.schedule.get_breed_count(Aggressor))
-            print('Final number victims: ',
-                  self.schedule.get_breed_count(Victim))
-            print('Final number policepersons: ',
-                  self.schedule.get_breed_count(Person))
+            print('Final number People: ', self.schedule.get_breed_count(Person))
 
 
 if __name__ == '__main__':
