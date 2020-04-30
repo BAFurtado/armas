@@ -7,8 +7,8 @@ try:
     from home.agents import Person, Family
     from home.model import Home
 except ModuleNotFoundError:
-    from model import Home
     from agents import Person, Family
+    from model import Home
 
 
 # strong blue
@@ -54,12 +54,11 @@ def home_violence_portrayal(agent):
     return portrayal
 
 
-model_params = dict(height=40, width=40)
-
 canvas_element = CanvasGrid(home_violence_portrayal, 40, 40, 480, 480)
 chart_element = ChartModule([{"Label": "Person", "Color": ADULT},
                              {"Label": "Aggressor", "Color": AGGRESSOR},
                              {"Label": "Victim", "Color": VICTIM}])
+another_chart = ChartModule([{"Label": "Stress", "Color": AGGRESSOR}])
 
 model_params = {"initial_families": UserSettableParameter('slider', 'Initial Families', 100, 5, 300),
                 "is_working_pct": UserSettableParameter('slider', 'Percentage Employed', 0.8, 0.01, 1.0, 0.01),
@@ -70,5 +69,5 @@ model_params = {"initial_families": UserSettableParameter('slider', 'Initial Fam
                                                          0.0, 0.05, 0.1, 0.005)
                 }
 
-server = ModularServer(Home, [canvas_element, chart_element], "Home Violence", model_params)
+server = ModularServer(Home, [canvas_element, chart_element, another_chart], "Home Violence", model_params)
 server.port = 8521

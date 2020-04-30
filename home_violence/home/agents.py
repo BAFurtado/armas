@@ -112,7 +112,10 @@ class Family(Agent):
         # It will include family stress indicator update
         # Likelihood of triggering aggression
         # New values
-        pass
+        stress = 0
+        for agents in self.members.values():
+            stress += agents.stress
+        self.context_stress = stress / len(self.members)
 
 
 if __name__ == '__main__':

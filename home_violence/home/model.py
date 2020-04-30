@@ -58,7 +58,8 @@ class Home(Model):
         model_reporters = {
             "Person": lambda m: self.count_type_citizens(m, "person"),
             "Victim": lambda m: self.count_type_citizens(m, "victim"),
-            "Aggressor": lambda m: self.count_type_citizens(m, "aggressor")}
+            "Aggressor": lambda m: self.count_type_citizens(m, "aggressor"),
+            "Stress": lambda m: self.count_type_citizens(m)}
         self.datacollector = DataCollector(model_reporters=model_reporters)
 
         # TODO: check if necessary to rearange all randoms towards numpy.random
@@ -67,7 +68,12 @@ class Home(Model):
             # 1. Create a family. Create a couple, add to the family
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
+            # Create a family
             family = Family(self.next_id(), self, (x, y))
+            # Add family to grid
+            self.grid.place_agent(family, (x, y))
+            self.schedule.add(family)
+            # Add people to families
             to_marry = list()
             for gender in ['male', 'female']:
                 adult = Person(self.next_id(), self, (x, y), gender=gender,
@@ -102,22 +108,24 @@ class Home(Model):
 
         # Check if step will happen at individual levels or at family levels or BOTH
         if self.verbose:
-            print([self.schedule.time,
-                   self.schedule.get_breed_count(Person)])
+            print([self.schedule.time, self.schedule.get_breed_count(Person)])
 
         # New condition to stop the model
         if self.schedule.get_breed_count(Person) == 0:
             self.running = False
 
     @staticmethod
-    def count_type_citizens(model, condition):
+    def count_type_citizens(model, condition=None):
         """
         Helper method to count agents by Type.
         """
         count = 0
         for agent in model.schedule.agents:
-            if agent.type == condition:
-                count += 1
+            if isinstance(agent, Person):
+                if agent.type == condition:
+                    count += 1
+            else:
+                count += agent.context_stress
         return count
 
     def run_model(self, step_count=200):
@@ -138,3 +146,7 @@ if __name__ == '__main__':
     # Bernardo's debugging
     my_model = Home()
     my_model.run_model()
+    my_model.step()
+    my_model.step()
+    my_model.step()
+    my_model.step()
