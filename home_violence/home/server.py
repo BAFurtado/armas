@@ -4,7 +4,6 @@ from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.UserParam import UserSettableParameter
 
-
 try:
     from home.agents import Person, Family
     from home.model import Home
@@ -65,8 +64,8 @@ chart_element = ChartModule([{"Label": "Person", "Color": ADULT},
                              {"Label": "Victim", "Color": VICTIM}])
 another_chart = ChartModule([{"Label": "Stress", "Color": AGGRESSOR}])
 
-model_params = {"gender_stress": UserSettableParameter('slider', "Male Gender Stress", 0.80, 0.1, 1.0, 0.05),
-                "initial_families": UserSettableParameter('slider', 'Initial Families', 50, 5, 500),
+model_params = {"initial_families": UserSettableParameter('slider', 'Initial Families', 50, 5, 500),
+                "gender_stress": UserSettableParameter('slider', "Male Gender Stress", 0.80, 0.1, 1.0, 0.05),
                 "is_working_pct": UserSettableParameter('slider', 'Percentage Employed', 0.9, 0.01, 1.0, 0.01),
                 "chance_changing_working_status": UserSettableParameter('slider', 'Chance of Changing Working Status',
                                                                         0.4, 0.1, 1.0, 0.05),
