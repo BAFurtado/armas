@@ -62,7 +62,6 @@ class Home(Model):
             "Stress": lambda m: self.count_type_citizens(m)}
         self.datacollector = DataCollector(model_reporters=model_reporters)
 
-        # TODO: check if necessary to rearange all randoms towards numpy.random
         # Create people:
         for i in range(self.initial_families):
             # 1. Create a family. Create a couple, add to the family
@@ -119,13 +118,16 @@ class Home(Model):
         """
         Helper method to count agents by Type.
         """
-        count = 0
+        count, size = 0, 0
         for agent in model.schedule.agents:
             if isinstance(agent, Person):
                 if agent.type == condition:
                     count += 1
             else:
                 count += agent.context_stress
+                size += 1
+        if condition is None:
+            return count / size
         return count
 
     def run_model(self, step_count=200):

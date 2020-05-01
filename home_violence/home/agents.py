@@ -67,7 +67,6 @@ class Person(Agent):
         """
         Uses self stress and family context to incur in probability of becoming violent
         """
-        # TODO: Change age filter before goes through steps
         if self.age > 18:
             self.update_stress()
         else:

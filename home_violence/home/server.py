@@ -1,3 +1,5 @@
+import numpy as np
+
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.UserParam import UserSettableParameter
@@ -17,6 +19,9 @@ ADULT = "#0066CC"
 VICTIM = "#CC0000"
 # dark grey
 AGGRESSOR = "#757575"
+# From Champagne to Bistre
+colors = ["#ecd8beff", "#e7cfb7ff", "#e3c8b2ff", "#d7b8a3ff", "#c09987ff", "#c09987ff", "#ab7e6aff", "#966450ff",
+          '794d39ff', "#794d39ff", "#794d39ff", "#6b422dff", "#2c1903ff"]
 
 
 def home_violence_portrayal(agent):
@@ -25,26 +30,27 @@ def home_violence_portrayal(agent):
 
     portrayal = {"Shape": "circle",
                  "x": agent.pos[0], "y": agent.pos[1],
-                 "Filled": "false"}
+                 "Filled": "true"}
 
     if type(agent) is Person:
         if agent.type == 'person':
             portrayal["Color"] = ADULT
-            portrayal["r"] = 0.85
-            portrayal["Layer"] = 0
+            portrayal["r"] = 0.3
+            portrayal["Layer"] = 1
 
         elif agent.type == 'victim':
             portrayal["Color"] = VICTIM
-            portrayal["r"] = 0.7
-            portrayal["Layer"] = 1
+            portrayal["r"] = 0.1
+            portrayal["Layer"] = 2
 
         elif agent.type == 'aggressor':
             portrayal["Color"] = AGGRESSOR
             portrayal["r"] = 0.3
-            portrayal["Layer"] = 2
+            portrayal["Layer"] = 3
 
     elif type(agent) is Family:
-        portrayal["Color"] = ["#84e184", "#adebad", "#d6f5d6"]
+        f, b = np.histogram(agent.context_stress, bins=len(colors))
+        portrayal["Color"] = colors[f.argmax()]
         portrayal["Shape"] = "rect"
         portrayal["Filled"] = "true"
         portrayal["Layer"] = 0
@@ -64,9 +70,9 @@ model_params = {"initial_families": UserSettableParameter('slider', 'Initial Fam
                 "is_working_pct": UserSettableParameter('slider', 'Percentage Employed', 0.8, 0.01, 1.0, 0.01),
                 "chance_changing_working_status": UserSettableParameter('slider',
                                                                         'Chance of Changing Working Status',
-                                                                        0.0, 0.05, 0.1, 0.005),
+                                                                        0.0, 1.0, 0.1, 0.05),
                 "pct_change_wage": UserSettableParameter('slider', 'Percentage of Changing Wage Chance',
-                                                         0.0, 0.05, 0.1, 0.005)
+                                                         0.0, 1.0, 0.1, 0.05)
                 }
 
 server = ModularServer(Home, [canvas_element, chart_element, another_chart], "Home Violence", model_params)
