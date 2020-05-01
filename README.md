@@ -6,7 +6,7 @@ the occurrence of crimes and motivations behind it. ... **explore the potential 
 simulate the main processes and drivers within this system**." (Malleson, Heppenstall, See, 2009).  
 
 We developed the model on top of [https://github.com/projectmesa/mesa] mesa wolf_sheep example
-We thank David Massa e all the contributors of the mesa project. See folder `guns_model`
+We thank David Massa e all the contributors of the mesa project. 
 
 **Alan Rafael Dill**
 
@@ -14,16 +14,21 @@ We thank David Massa e all the contributors of the mesa project. See folder `gun
 
 **Bernardo Alves Furtado**
 
-We are considering: 
+We are considering two models: 
 
+### 1. Home violence model
 
-### Home violence model
+An exploratory **stay-at-home-COVID-increased-violence** model. *Under construction*
 
-An exploratory **stay-at-home-COVID-increased-violence** model. See folder `home_violence`
+See folder `home_violence`
 
-###### Under construction
+1. A partir de um indicador de **stress** dos agentes, baseados em fatores tais como: gênero, histórico de agressões
+salário, horas em casa e número de membros na família; maior probabilidade de agressão.
+2. Entidades: pessoas (adultos, crianças, famílias)
+3. Alterações nos estados: trabalha/não trabalho, salário (0, 1), número de horas em casa
+4. Pergunta: estimar magnitude da maior permanência em casa como fator agravamento violência doméstica
 
-### Gun-reaction model
+### 2. Gun-reaction model
 
 See folder `guns_model`
 
@@ -38,8 +43,8 @@ See folder `guns_model`
             1. Se há reação da vítima, 
                 1. Morre vítima ou agressor  
 
-#### To run the model:
-#### Para rodar o modelo, desde o início
+## To run the models:
+#### Para rodar os modelos, desde a instalação inicial
 
 1. Preferencialmente, download e instale Python, via [https://www.anaconda.com/distribution] conda. No mínimo, tenha Pyton3 instalado
 2. Preferencialmente, download e instale uma IDE. Sugiro [https://www.jetbrains.com/pycharm/download/] PyCharm Community. Universitários tem acesso à versão profissional, basta cadastro com e-mail institucional. 
@@ -47,8 +52,10 @@ See folder `guns_model`
 4. Com todos funcionando, vá até o Terminal do PyCharm (ou command line com acesso a Python) e usando o Git, clone esse repositório:
     1. `git clone https://github.com/BAFurtado/armas.git`  
     2. `pip install mesa`
+    
+#### To actually run
 5. Utilize o comando `cd` para que o Terminal esteja no diretorio correto: 
-    1. `~/mesa_guns/guns_model` directory
+    1. `cd ~/mesa_guns/guns_model` directory OU `cd ~/mesa_guns/home_violence`
     2. Type `mesa runserver` e pronto. Se tudo foi instalado, o browser se abriu automaticamente. 
     3. Altere os parâmetros como quiser.
     4. Clique em `Reset` no último botão à direita, na barra preta ao alto.
