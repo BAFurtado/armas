@@ -79,7 +79,7 @@ class Home(Model):
                                age=round(self.random.triangular(19, 80, 34)),
                                is_working=np.random.choice([True, False],
                                                            p=[self.is_working_pct, 1 - self.is_working_pct]),
-                               wage=np.random.beta(2, 5))
+                               reserve_wage=np.random.beta(2, 5))
                 self.grid.place_agent(adult, (x, y))
                 self.schedule.add(adult)
                 family.add_agent(adult)
@@ -152,7 +152,3 @@ if __name__ == '__main__':
     # Bernardo's debugging
     my_model = Home()
     my_model.run_model()
-    my_model.step()
-    my_model.step()
-    my_model.step()
-    my_model.step()

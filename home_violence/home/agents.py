@@ -7,17 +7,19 @@ class Person(Agent):
 
     """
 
-    def __init__(self, unique_id, model, pos, gender='male', age=25, is_working=False, wage=.5, category='person'):
+    def __init__(self, unique_id, model, pos, gender='male', age=25, is_working=False, wage=0, reserve_wage=.5,
+                 category='person'):
         super().__init__(unique_id, model)
         self.pos = pos
         self.gender = gender
         self.age = age
         self.is_working = is_working
+        self.reserve_wage = reserve_wage
         self.wage = wage
         self.spouse = None
         self.got_attacked = 0
         self.assaulted = 0
-        self.hours_home = 0
+        self.hours_home = .34 if self.is_working else .67
         self.family = None
         self.num_members_family = 1
         self.stress = 0
@@ -35,20 +37,23 @@ class Person(Agent):
 
     def step_change(self):
         # How conditions that cause stress change?
-        changes = self.random.random()
-        if changes < self.model.chance_changing_working_status:
+        if self.model.random.random() < self.model.chance_changing_working_status:
             self.is_working = not self.is_working
-        if changes < self.model.pct_change_wage:
-            self.wage *= self.model.random.uniform(-self.model.pct_change_wage, self.model.pct_change_wage)
+            if not self.is_working:
+                self.wage = 0
+            else:
+                self.reserve_wage *= self.model.random.uniform(-self.model.pct_change_wage, self.model.pct_change_wage)
+                self.wage = self.reserve_wage
+            self.hours_home = .34 if self.is_working else .67
 
     def assign_spouse(self, agent):
         self.spouse = agent
         agent.spouse = self
 
     def update_stress(self):
-        self.update_hours()
+        self.step_change()
         # Update num_members_family
-        self.num_members_family = 1 if self.family is None else len(self.family.members)
+        self.num_members_family = len(self.family.members)
 
         # Update stress based on gender, wage level, hours at home, family size and history of violence
         tmp = self.model.gender_stress if self.gender == 'male' else 1 - self.model.gender_stress
@@ -57,14 +62,6 @@ class Person(Agent):
         tmp **= 1/self.num_members_family
         tmp **= 1/(1 + self.assaulted)
         self.stress = tmp
-
-    def update_hours(self):
-        self.hours_home = .34 if self.is_working else .67
-
-    def update_work(self, working, wage):
-        self.is_working = working
-        self.wage = wage
-        self.update_hours()
 
     def trigger_violence(self):
         """
