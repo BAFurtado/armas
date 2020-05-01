@@ -7,7 +7,7 @@ class Person(Agent):
 
     """
 
-    def __init__(self, unique_id, model, pos, gender='male', age=25, is_working=False, wage=.5, type='person'):
+    def __init__(self, unique_id, model, pos, gender='male', age=25, is_working=False, wage=.5, category='person'):
         super().__init__(unique_id, model)
         self.pos = pos
         self.gender = gender
@@ -21,14 +21,17 @@ class Person(Agent):
         self.family = None
         self.num_members_family = 1
         self.stress = 0
-        self.type = type
+        self.category = category
 
     def step(self):
         """
         A model step.
         """
         # Check and execute
-        self.trigger_violence()
+        if self.age > 18:
+            self.trigger_violence()
+        else:
+            pass
 
     def step_change(self):
         # How conditions that cause stress change?
@@ -67,17 +70,14 @@ class Person(Agent):
         """
         Uses self stress and family context to incur in probability of becoming violent
         """
-        if self.age > 18:
-            self.update_stress()
-        else:
-            return
+        self.update_stress()
 
         # First time offender get registered in the system and changes class as an Aggressor and a Victim
         if self.assaulted == 0:
             if self.stress > self.random.random():
-                self.type = 'aggressor'
+                self.category = 'aggressor'
                 self.assaulted += 1
-                self.spouse.type = 'victim'
+                self.spouse.category = 'victim'
                 self.spouse.got_attacked += 1
 
         # Second-time offender, checks to see if it is a recidivist.

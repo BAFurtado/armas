@@ -25,7 +25,7 @@ class Home(Model):
     A Home Violence Simulation Model
     """
 
-    verbose = False  # Print-monitoring
+    verbose = True  # Print-monitoring
     description = 'A model for simulating the victim aggressor interaction mediated by presence of home.'
 
     def __init__(self, height=40, width=40,
@@ -59,7 +59,7 @@ class Home(Model):
             "Person": lambda m: self.count_type_citizens(m, "person"),
             "Victim": lambda m: self.count_type_citizens(m, "victim"),
             "Aggressor": lambda m: self.count_type_citizens(m, "aggressor"),
-            "Stress": lambda m: self.count_type_citizens(m)}
+            "Stress": lambda m: self.count_stress(m)}
         self.datacollector = DataCollector(model_reporters=model_reporters)
 
         # Create people:
@@ -87,7 +87,7 @@ class Home(Model):
             # 2. Marry the couple
             to_marry[0].assign_spouse(to_marry[1])
             # 3. Create some children, Add to the family
-            num_children = round(self.random.triangular(0, 5, 1.8))
+            num_children = int(self.random.triangular(0, 5, 1.8))
             for ch in range(num_children):
                 child = Person(self.next_id(), self, (x, y), gender=np.random.choice(['female', 'male'], p=[.6, .4]),
                                age=round(self.random.triangular(0, 18, 9)),
@@ -114,21 +114,25 @@ class Home(Model):
             self.running = False
 
     @staticmethod
-    def count_type_citizens(model, condition=None):
+    def count_type_citizens(model, condition):
         """
         Helper method to count agents by Type.
         """
-        count, size = 0, 0
+        count = 0
         for agent in model.schedule.agents:
             if isinstance(agent, Person):
-                if agent.type == condition:
+                if agent.category == condition:
                     count += 1
-            else:
+        return count
+
+    @staticmethod
+    def count_stress(model):
+        count, size = 0, 0
+        for agent in model.schedule.agents:
+            if isinstance(agent, Family):
                 count += agent.context_stress
                 size += 1
-        if condition is None:
-            return count / size
-        return count
+        return count / size
 
     def run_model(self, step_count=200):
 
