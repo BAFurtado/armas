@@ -1,9 +1,4 @@
-#### Análise crimininalidade e violência com modelos baseados em agentes -- ABMs
-
-"Traditionally, researchers have employed statistical methods to model crime. However, these approaches
-are limited by being unable to model individual actions and behaviour. ... [a model should] attempt to model
-the occurrence of crimes and motivations behind it. ... **explore the potential of the model to realistically
-simulate the main processes and drivers within this system**." (Malleson, Heppenstall, See, 2009).  
+#### Análise crimininalidade com modelos baseados em agentes -- ABMs  
 
 We developed the model on top of [https://github.com/projectmesa/mesa] mesa wolf_sheep example
 We thank David Massa e all the contributors of the mesa project. 
@@ -14,19 +9,7 @@ We thank David Massa e all the contributors of the mesa project.
 
 **Bernardo Alves Furtado**
 
-We are considering two models: 
-
-### 1. Home violence model
-
-An exploratory **stay-at-home-COVID-increased-violence** model. *Under construction*
-
-See folder `home_violence`
-
-1. A partir de um indicador de **stress** dos agentes, baseados em fatores tais como: gênero, histórico de agressões
-salário, horas em casa e número de membros na família; maior probabilidade de agressão.
-2. Entidades: pessoas (adultos, crianças, famílias)
-3. Alterações nos estados: trabalha/não trabalho, salário (0, 1), número de horas em casa
-4. Pergunta: estimar magnitude da maior permanência em casa como fator agravamento violência doméstica
+We are considering two models (see github.com/bafurtado/home_violence) for the other one: 
 
 ### 2. Gun-reaction model
 
