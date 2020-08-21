@@ -7,8 +7,8 @@ Directly adapted from mesa example which is inspired by the model found in NetLo
     Center for Connected Learning and Computer-Based Modeling,
     Northwestern University, Evanston, IL.
 """
-
-from mesa import Model
+from mesa.model import Model
+# from mesa import Model
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 

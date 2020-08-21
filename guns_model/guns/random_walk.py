@@ -2,7 +2,7 @@
 Generalized behavior for random walking, one grid cell at a time.
 """
 
-from mesa import Agent
+from mesa.agent import Agent
 
 
 class RandomWalker(Agent):
